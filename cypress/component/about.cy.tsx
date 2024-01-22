@@ -1,4 +1,4 @@
-import Page from '../../app/page'
+import Page from '../../cypress/page'
 
 describe('<Page />', () => {
     it('should render and display expected content', () => {
