@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PleaseFixMe",
-  description: "PleaseFixMe Site",
+  description: "PleaseFixMe is a defect tracking system designed to facilitate the reporting of product or service defects.",
 };
 
 export default function RootLayout({
