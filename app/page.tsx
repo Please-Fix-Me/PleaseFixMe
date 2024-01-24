@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientTest from "./components/client-test";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
           Welcome to PleaseFixMe!
         </h1>
         <p>We are working on building the application and will have a version live soon.</p>
+        <p>{process.env.DB_HOST}</p>
       </div>
     </main>
   );
