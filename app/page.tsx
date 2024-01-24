@@ -1,5 +1,4 @@
 import Image from "next/image";
-import ClientTest from "./components/client-test";
 
 export default function Home() {
   return (
