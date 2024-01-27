@@ -1,4 +1,4 @@
-import BugDisplay from "./components/bugDisplay";
+import BugDisplay from "./components/BugDisplay";
 
 export default function Home() {
   return (
