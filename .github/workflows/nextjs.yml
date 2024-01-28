@@ -79,12 +79,16 @@ jobs:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          BUGS_COLLECTION_NAME: ${{ secrets.BUGS_COLLECTION_NAME }}
         run: |
           touch .env.local
           echo DB_HOST=${{ env.DB_HOST }} >> .env.local
           echo DB_CONNECTION_STRING=${{ env.DB_CONNECTION_STRING }} >> .env.local
           echo DB_PORT=${{ env.DB_PORT }} >> .env.local
           echo DB_PASSWORD=${{ env.DB_PASSWORD }} >> .env.local
+          echo DB_NAME=${{ env.DB_NAME }} >> .env.local
+          echo BUGS_COLLECTION_NAME=${{ env.BUGS_COLLECTION_NAME }} >> .env.local
           cat .env.local
           ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
