@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoClient } from 'mongodb';
 
-
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
     const uri = process.env.DB_CONNECTION_STRING!
     const db = process.env.DB_NAME!
