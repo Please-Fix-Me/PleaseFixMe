@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "app/api/data.js"  ],
+, "app/api/data.js", "app/utils/uuid.js"  ],
   "exclude": [
     "node_modules"
   ]
