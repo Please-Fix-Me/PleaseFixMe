@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { MongoClient } from 'mongodb';
 import { BUSINESS_COLLECTION_NAME, BUSINESS_PASSWORD_COLLECTION_NAME } from "@/app/constants";
 import { randomUUID } from "crypto";
-import generatePassword from "@/app/utils/generatePassword";
 import insertDocument from "@/app/utils/insertDocument";
 import updateDocument from "@/app/utils/updateDocument";
+import generatePassword from "@/app/utils/generatePassword.js";
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const db = process.env.DB_NAME!
 
     // Set response object to track
-    var response = null;
+    var response: NextResponse<any> = NextResponse.json({ status: 500 })
 
     const body = await request.json()
 
@@ -99,7 +99,7 @@ export async function PUT(request: NextRequest) {
     const db = process.env.DB_NAME!
 
     // Set response object to track
-    var response = null;
+    var response: NextResponse<any> = NextResponse.json({ status: 500 })
 
     const body = await request.json()
 
@@ -147,7 +147,7 @@ export async function DELETE(request: NextRequest) {
     const db = process.env.DB_NAME!
 
     // Set response object to track
-    var response = null;
+    var response: NextResponse<any> = NextResponse.json({ status: 500 })
 
     const client = new MongoClient(uri);
     const businessName = request.nextUrl.searchParams.get("name")

@@ -11,7 +11,7 @@ export async function GET(request:NextRequest) {
     const client = new MongoClient(uri);
     var businessNames = []
 
-    var response = null;
+    var response: NextResponse<any> = NextResponse.json({ status: 500 })
 
     try {
         // Connect to the MongoDB cluster
@@ -25,7 +25,7 @@ export async function GET(request:NextRequest) {
         var data = await collection.find().toArray();
 
         businessNames = data.map(data => data.name)
-        response = NextResponse.json(businessNames)
+        response = NextResponse.json(businessNames ?? {})
     } catch (e) {
         if (e instanceof Error) {
             response = NextResponse.json({
