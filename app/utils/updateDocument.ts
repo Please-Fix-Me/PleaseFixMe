@@ -17,7 +17,6 @@ export default async function updateDocument(collection: Collection, json: FormD
             { name: name },
             {
                 $set: json,
-                // $currentDate: { lastModified: true }
             }
         );
 
