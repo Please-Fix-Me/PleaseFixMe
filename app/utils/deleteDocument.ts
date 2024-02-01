@@ -1,6 +1,6 @@
-import { MongoClient } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
-export default async function insertDocument(collectionName: string, json: object): Promise<{ success: boolean; message: string }> {
+export default async function deleteDocument(collectionName: string, json: object): Promise<{ success: boolean; message: string }> {
     const uri = process.env.DB_CONNECTION_STRING!
     const db = process.env.DB_NAME!
 
@@ -14,17 +14,17 @@ export default async function insertDocument(collectionName: string, json: objec
         const database = client.db(db);
         const collection = database.collection(collectionName);
 
-        const result = await collection.insertOne(json);
+        const result = await collection.deleteOne(json);
 
         if (result.acknowledged) {
-            console.log('Document was successfully inserted:', result.insertedId);
-            return { success: true, message: 'Document was successfully inserted.' };
+            console.log('Document was successfully deleted:', result.acknowledged);
+            return { success: true, message: 'Document was successfully deleted.' };
         } else {
-            console.log('No document was inserted.');
-            return { success: false, message: 'No document was inserted.' };
+            console.log('No document was deleted.');
+            return { success: false, message: 'No document was deleted.' };
         }
     } catch (error) {
-        console.error('An error occurred while inserting the document:', error);
+        console.error('An error occurred while deleting the document:', error);
         if (error instanceof Error) {
             return { success: false, message: error.message };
         } else {

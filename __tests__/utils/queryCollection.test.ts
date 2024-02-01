@@ -1,5 +1,5 @@
 import { mockDeep, MockProxy } from 'jest-mock-extended';
-import queryDb from '@/app/utils/queryCollection';
+import queryCollection from '@/app/utils/queryCollection';
 import { MongoClient, Db, Collection } from 'mongodb';
 
 jest.mock('mongodb');
@@ -26,12 +26,12 @@ beforeEach(() => {
     (MongoClient as jest.MockedClass<typeof MongoClient>).mockImplementation(() => mockClient);
 });
 
-describe('queryDb', () => {
+describe('queryCollection', () => {
     it('should return data from the database', async () => {
         const mockData = [{ id: 1, name: 'Test' }];
         mockCursor.toArray.mockResolvedValue(mockData);
 
-        const result = await queryDb('test', {});
+        const result = await queryCollection('test', {});
 
         expect(result).toEqual({ success: true, result: mockData });
         expect(mockClient.connect).toBeCalledTimes(1);
@@ -42,7 +42,7 @@ describe('queryDb', () => {
         const mockError = new Error('Test error');
         mockCursor.toArray.mockRejectedValue(mockError);
 
-        const result = await queryDb('test', {});
+        const result = await queryCollection('test', {});
 
         expect(result).toEqual({ success: false, result: mockError.message });
         expect(mockClient.connect).toBeCalledTimes(1);

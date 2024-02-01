@@ -1,47 +1,69 @@
 
 import '@testing-library/jest-dom'
 import insertDocument from '../../app/utils/insertDocument'
-import { Collection, InsertOneResult, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-const mockInsertOne = jest.fn();
-jest.mock('mongodb', () => ({
-  Collection: jest.fn().mockImplementation(() => ({
-    insertOne: mockInsertOne,
-  })),
-  ObjectId: jest.fn().mockImplementation(() => 'mockObjectId'),
-}));
+jest.mock('mongodb');
 
-describe('insertDocument', () => {
-  let collection: Collection;
+let mockInsertOne: jest.Mock;
 
-  beforeEach(() => {
-    collection = new Collection();
-  });
+beforeEach(() => {
+    mockInsertOne = jest.fn();
+    (MongoClient as unknown as jest.Mock).mockReturnValue({
+        connect: jest.fn().mockResolvedValue(undefined),
+        db: jest.fn().mockReturnValue({
+            collection: jest.fn().mockReturnValue({
+                insertOne: mockInsertOne,
+            }),
+        }),
+        close: jest.fn().mockResolvedValue(undefined),
+    });
+});
 
-  it('should return success when document is inserted', async () => {
-    const mockResult: InsertOneResult<any> = {
-      acknowledged: true,
-      insertedId: new ObjectId(),
-    };
-    mockInsertOne.mockResolvedValue(mockResult);
-    const result = await insertDocument(collection, {});
+it('should insert a doc into collection and return success', async () => {
+    const collectionName = 'testCollection';
+    const json = { test: 'test' };
+
+    mockInsertOne.mockResolvedValue({ acknowledged: true, insertedId: 'testId' });
+
+    const result = await insertDocument(collectionName, json);
+
     expect(result).toEqual({ success: true, message: 'Document was successfully inserted.' });
-  });
+    expect(mockInsertOne).toHaveBeenCalledWith(json);
+});
 
-  it('should return failure when no document is inserted', async () => {
-    const mockResult: InsertOneResult<any> = {
-      acknowledged: false,
-      insertedId: new ObjectId(),
-    };
-    mockInsertOne.mockResolvedValue(mockResult);
-    const result = await insertDocument(collection, {});
+it('should fail to insert a doc into collection and return failure', async () => {
+    const collectionName = 'testCollection';
+    const json = { test: 'test' };
+
+    mockInsertOne.mockResolvedValue({ acknowledged: false });
+
+    const result = await insertDocument(collectionName, json);
+
     expect(result).toEqual({ success: false, message: 'No document was inserted.' });
-  });
+    expect(mockInsertOne).toHaveBeenCalledWith(json);
+});
 
-  it('should return error message when an error occurs', async () => {
-    const mockError = new Error('Test error');
-    mockInsertOne.mockRejectedValue(mockError);
-    const result = await insertDocument(collection, {});
-    expect(result).toEqual({ success: false, message: 'Test error' });
-  });
+it('should handle errors when they are instances of Error', async () => {
+    const collectionName = 'testCollection';
+    const json = { _id: 'invalid' }; // Invalid _id will cause an error
+
+    mockInsertOne.mockRejectedValue(new Error('An error occurred.'));
+
+    const result = await insertDocument(collectionName, json);
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('An error occurred.');
+});
+
+it('should handle errors when they are not instances of Error', async () => {
+    const collectionName = 'testCollection';
+    const json = { _id: 'invalid' }; // Invalid _id will cause an error
+
+    mockInsertOne.mockRejectedValue('An error occurred.');
+
+    const result = await insertDocument(collectionName, json);
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('An unknown error occurred.');
 });

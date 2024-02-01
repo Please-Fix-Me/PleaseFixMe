@@ -1,89 +1,69 @@
 
 import '@testing-library/jest-dom'
 import updateDocument from '../../app/utils/updateDocument'
-import { Collection } from 'mongodb';
-import { ObjectId as BsonObjectId } from 'bson';
+import { MongoClient } from 'mongodb';
 
 jest.mock('mongodb');
 
-describe('updateDocument', () => {
-    let mockCollection: jest.Mocked<Collection>;
+let mockUpdateOne: jest.Mock;
 
-    beforeEach(() => {
-        mockCollection = {
-            updateOne: jest.fn(),
-        } as any;
+beforeEach(() => {
+    mockUpdateOne = jest.fn();
+    (MongoClient as unknown as jest.Mock).mockReturnValue({
+        connect: jest.fn().mockResolvedValue(undefined),
+        db: jest.fn().mockReturnValue({
+            collection: jest.fn().mockReturnValue({
+                updateOne: mockUpdateOne,
+            }),
+        }),
+        close: jest.fn().mockResolvedValue(undefined),
     });
+});
 
-    it('should update the document successfully', async () => {
-        const formData = {
-            name: 'test',
-            contactName: 'test contact',
-            contactEmail: 'test@test.com',
-            contactPhone: '1234567890',
-        };
+it('should update a doc in the collection and return success', async () => {
+    const collectionName = 'testCollection';
+    const json = { name: 'test', contactName: 'test', contactEmail: 'test@test.com', contactPhone: '1234567890' };
 
-        mockCollection.updateOne.mockResolvedValue({
-            acknowledged: true, 
-            upsertedId: new BsonObjectId(),
-            matchedCount: 1,
-            modifiedCount: 1,
-            upsertedCount: 1
-        });
+    mockUpdateOne.mockResolvedValue({ acknowledged: true, upsertedId: 'testId' });
 
-        const result = await updateDocument(mockCollection, formData);
+    const result = await updateDocument(collectionName, json);
 
-        expect(result).toEqual({ success: true, message: 'Document was successfully updated.' });
-    });
+    expect(result).toEqual({ success: true, message: 'Document was successfully updated.' });
+    expect(mockUpdateOne).toHaveBeenCalledWith({ name: 'test' }, { $set: { contactName: 'test', contactEmail: 'test@test.com', contactPhone: '1234567890' } });
+});
 
-    it('should return an error if no document was updated', async () => {
-        const formData = {
-            name: 'test',
-            contactName: 'test contact',
-            contactEmail: 'test@test.com',
-            contactPhone: '1234567890',
-        };
+it('should fail to update a doc in the collection and return failure', async () => {
+    const collectionName = 'testCollection';
+    const json = { name: 'test', contactName: 'test', contactEmail: 'test@test.com', contactPhone: '1234567890' };
 
-        mockCollection.updateOne.mockResolvedValue({
-            acknowledged: false, 
-            matchedCount: 0,
-            modifiedCount: 0,
-            upsertedCount: 0,
-            upsertedId: new BsonObjectId(),
-        });
+    mockUpdateOne.mockResolvedValue({ acknowledged: false });
 
-        const result = await updateDocument(mockCollection, formData);
+    const result = await updateDocument(collectionName, json);
 
-        expect(result).toEqual({ success: false, message: 'No document was updated.' });
-    });
+    expect(result).toEqual({ success: false, message: 'No document was updated.' });
+    expect(mockUpdateOne).toHaveBeenCalledWith({ name: 'test' }, { $set: { contactName: 'test', contactEmail: 'test@test.com', contactPhone: '1234567890' } });
+});
 
-    it('should return an error if an exception is thrown', async () => {
-        const formData = {
-            name: 'test',
-            contactName: 'test contact',
-            contactEmail: 'test@test.com',
-            contactPhone: '1234567890',
-        };
+it('should handle errors when they are instances of Error', async () => {
+    const collectionName = 'testCollection';
+    const json = { name: 'test', contactName: 'test', contactEmail: 'test@test.com', contactPhone: '1234567890' };
 
-        mockCollection.updateOne.mockRejectedValue(new Error('Test error'));
+    mockUpdateOne.mockRejectedValue(new Error('An error occurred.'));
 
-        const result = await updateDocument(mockCollection, formData);
+    const result = await updateDocument(collectionName, json);
 
-        expect(result).toEqual({ success: false, message: 'Test error' });
-    });
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('An error occurred.');
+});
 
-    it('should return an unknown error if a non-Error exception is thrown', async () => {
-        const formData = {
-            name: 'test',
-            contactName: 'test contact',
-            contactEmail: 'test@test.com',
-            contactPhone: '1234567890',
-        };
+it('should handle errors when they are not instances of Error', async () => {
+    const collectionName = 'testCollection';
+    const json = { name: 'test', contactName: 'test', contactEmail: 'test@test.com', contactPhone: '1234567890' };
 
-        mockCollection.updateOne.mockRejectedValue('Test error');
+    mockUpdateOne.mockRejectedValue('An error occurred.');
 
-        const result = await updateDocument(mockCollection, formData);
+    const result = await updateDocument(collectionName, json);
 
-        expect(result).toEqual({ success: false, message: 'An unknown error occurred.' });
-    });
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('An unknown error occurred.');
 });

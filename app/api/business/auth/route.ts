@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MongoClient } from 'mongodb';
 import {  BUSINESS_PASSWORD_COLLECTION_NAME } from "@/app/constants";
-import queryDb from "@/app/utils/queryCollection";
+import queryCollection from "@/app/utils/queryCollection";
+import documentExists from "@/app/utils/documentExists";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request:NextRequest) {
-    var response = await queryDb(
+
+    // Query for all businesses
+    var response = await queryCollection(
         BUSINESS_PASSWORD_COLLECTION_NAME, 
         {}
     )
@@ -22,9 +24,12 @@ export async function GET(request:NextRequest) {
 }
 
 export async function POST(request:NextRequest) {
+
+    // Parse the request body
     const body = await request.json()
 
-    var response = await queryDb(
+    // Check if the business name and password combination exists in the database
+    var response = await documentExists(
         BUSINESS_PASSWORD_COLLECTION_NAME, 
         {
             name:  body['name'],
@@ -34,9 +39,11 @@ export async function POST(request:NextRequest) {
 
     // Parse response and return the correct result
     if (response.success) {
-        if (response.result.length > 0) {
+        if (response.result) {
+            // Document was found - ok
             return NextResponse.json({})
         } else {
+            // Document was not found - incorrect password
             return NextResponse.json({
                 message: "Incorrect password."
             }, {
@@ -44,6 +51,7 @@ export async function POST(request:NextRequest) {
             })
         }
     } else {
+        // Something went wrong
         return NextResponse.json({
             message: response.result
         }, {

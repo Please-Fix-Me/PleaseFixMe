@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-export default async function queryDb(collectionName: string, query: object): Promise<{ success: boolean; result: any }> {
+export default async function queryCollection(collectionName: string, query: object): Promise<{ success: boolean; result: any }> {
     const uri = process.env.DB_CONNECTION_STRING!
     const db = process.env.DB_NAME!
 

@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
 type FormData = {
     name?: string;
@@ -8,11 +8,23 @@ type FormData = {
 };
 
 
-export default async function updateDocument(collection: Collection, json: FormData): Promise<{ success: boolean; message: string }> {
+export default async function updateDocument(collectionName: string, json: FormData): Promise<{ success: boolean; message: string }> {
+
+    const uri = process.env.DB_CONNECTION_STRING!
+    const db = process.env.DB_NAME!
+
+    const client = new MongoClient(uri);
 
     const name = json.name;
     delete json.name
     try {
+        // Connect to MongoDB cluster
+        await client.connect();
+
+        // Specify the database and collection
+        const database = client.db(db);
+        const collection = database.collection(collectionName);
+
         const result = await collection.updateOne(
             { name: name },
             {
@@ -34,5 +46,7 @@ export default async function updateDocument(collection: Collection, json: FormD
         } else {
             return { success: false, message: 'An unknown error occurred.' };
         }
+    } finally {
+        await client.close()
     }
 }
