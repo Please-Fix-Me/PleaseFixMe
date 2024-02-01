@@ -33,12 +33,17 @@ export default function BusinessForm() {
                 }
             })
                 .then((res) => res.json())
-                .then((res) => res[0])
                 .then((res) => {
-                    delete res._id
-                    delete res.id
-                    setFormData(res)
-                    setIsLoading(false)
+                    if (res.success) {
+                        res = res.result[0]
+                        delete res._id
+                        delete res.id
+                        setFormData(res)
+                        setIsLoading(false)
+                    } else {
+                        alert(res.result)
+                        setIsLoading(false)
+                    }
                 })
         }
     }, [businessName, isLoading, requestFinished])

@@ -1,45 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoClient } from 'mongodb';
 import {  BUSINESS_PASSWORD_COLLECTION_NAME } from "@/app/constants";
+import queryDb from "@/app/utils/queryCollection";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request:NextRequest) {
-    const uri = process.env.DB_CONNECTION_STRING!
-    const db = process.env.DB_NAME!
-
-    const client = new MongoClient(uri);
-    var businessNames = []
-
-    var response: NextResponse<any> = NextResponse.json({ status: 500 })
-
-    try {
-        // Connect to the MongoDB cluster
-        await client.connect();
-
-        // Specify the database and collection
-        const database = client.db(db);
-        const collection = database.collection(BUSINESS_PASSWORD_COLLECTION_NAME);
-
-        // Find all entries in the collection
-        var data = await collection.find().toArray();
-
-        businessNames = data.map(data => data.name)
-        response = NextResponse.json(businessNames ?? {})
-    } catch (e) {
-        if (e instanceof Error) {
-            response = NextResponse.json({
-                message: e.message
-            }, {
-                status: 400,
-            })
-        }
-    } finally {
-        // Close the connection to the MongoDB cluster
-        await client.close();
+    var response = await queryDb(
+        BUSINESS_PASSWORD_COLLECTION_NAME, 
+        {}
+    )
+    
+    // Remove password from the response object
+    if (response.success) {
+        var data = response.result;
+        data = data.map((data: { name: string; }) => data.name)
+        response.result = data
     }
-
-    return response;
+    
+    return NextResponse.json(response);
 }
 
 export async function POST(request:NextRequest) {

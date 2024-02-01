@@ -5,34 +5,20 @@ import { randomUUID } from "crypto";
 import insertDocument from "@/app/utils/insertDocument";
 import updateDocument from "@/app/utils/updateDocument";
 import generatePassword from "@/app/utils/generatePassword.js";
+import queryDb from "@/app/utils/queryCollection";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request:NextRequest) {
-    const uri = process.env.DB_CONNECTION_STRING!
-    const db = process.env.DB_NAME!
-
-    const client = new MongoClient(uri);
     const businessName = request.nextUrl.searchParams.get("name")
-    var data;
 
-    try {
-        // Connect to the MongoDB cluster
-        await client.connect();
-
-        // Specify the database and collection
-        const database = client.db(db);
-        const collection = database.collection(BUSINESS_COLLECTION_NAME);
-
-        // Find all entries in the collection
-        data = await collection.find({name: businessName}).toArray();
-
-    } finally {
-        // Close the connection to the MongoDB cluster
-        await client.close();
-    }
-
-    return NextResponse.json(data);
+    var response = await queryDb(
+        BUSINESS_COLLECTION_NAME, 
+        {
+            name: businessName
+        }
+    )
+    return NextResponse.json(response);
 }
 
 export async function POST(request: NextRequest) {

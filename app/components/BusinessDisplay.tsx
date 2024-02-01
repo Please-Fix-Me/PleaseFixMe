@@ -18,8 +18,16 @@ export default function BusinessDisplay() {
             }
         })
             .then((res) => res.json())
-            .then((data) => setData(data))
-            .then((_) => setIsLoading(false))
+            .then((res) => {
+                if (res.success) {
+                    res = res.result
+                    setData(res)
+                    setIsLoading(false)
+                } else {
+                    alert(res.result)
+                    setIsLoading(false)
+                }
+            })
     }, [])
 
     return <div className="min-w-full py-4">
