@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 type FormData = {
     name: string;
+    description: string;
     contactName: string;
     contactEmail: string;
     contactPhone: string;
@@ -15,6 +16,7 @@ type FormData = {
 export default function BusinessForm() {
     const [formData, setFormData] = useState<FormData>({
         name: '',
+        description: '',
         contactName: '',
         contactEmail: '',
         contactPhone: '',
@@ -22,7 +24,7 @@ export default function BusinessForm() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [requestFinished, setRequestFinished] = useState<boolean>(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<any>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -71,6 +73,11 @@ export default function BusinessForm() {
                             <label className="block">
                                 Business Name:
                                 <input name="name" value={formData.name} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
+                            </label>
+
+                            <label className="block">
+                                Business Description:
+                                <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                             </label>
 
                             <label className="block">

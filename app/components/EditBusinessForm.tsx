@@ -7,6 +7,7 @@ import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
 
 type FormData = {
+    description: string;
     contactName: string;
     contactEmail: string;
     contactPhone: string;
@@ -14,6 +15,7 @@ type FormData = {
 
 export default function BusinessForm() {
     const [formData, setFormData] = useState<FormData>({
+        description: '',
         contactName: '',
         contactEmail: '',
         contactPhone: '',
@@ -81,7 +83,7 @@ export default function BusinessForm() {
             });
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<any>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -128,6 +130,11 @@ export default function BusinessForm() {
                                 <label className="block">
                                     Business Name: {businessName}
                                 </label>
+                                <label className="block">
+                                    Business Description:
+                                    <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
+                                </label>
+
 
                                 <label className="block">
                                     Contact Person Name:
