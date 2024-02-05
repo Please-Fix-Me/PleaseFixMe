@@ -21,13 +21,19 @@ export default function BusinessForm() {
         contactPhone: '',
     });
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [toggleRefreshState, setToggleRefreshState] = useState<boolean>(true);
     const [requestFinished, setRequestFinished] = useState<boolean>(false);
+
+    const refresh = () => {
+        setToggleRefreshState(!toggleRefreshState)
+    }
 
     const searchParams = useSearchParams();
     const businessName = searchParams.get("name")
 
     useEffect(() => {
         if (!requestFinished) {
+            setIsLoading(true)
             fetch('/api/business/?name=' + businessName, {
                 method: "GET",
                 headers: {
@@ -41,14 +47,13 @@ export default function BusinessForm() {
                         delete res._id
                         delete res.id
                         setFormData(res)
-                        setIsLoading(false)
                     } else {
                         alert(res.result)
-                        setIsLoading(false)
                     }
+                    setIsLoading(false)
                 })
         }
-    }, [businessName, isLoading, requestFinished])
+    }, [businessName, requestFinished, toggleRefreshState])
 
     const handleDelete = (e: any) => {
         e.preventDefault();
@@ -70,9 +75,9 @@ export default function BusinessForm() {
             })
             .then(data => {
                 // Handle the data from the successful response.
-                console.log(data);
                 alert("Business " + businessName + " deleted.");
                 setRequestFinished(true)
+                refresh()
                 setIsLoading(false)
             })
             .catch(error => {
@@ -107,9 +112,11 @@ export default function BusinessForm() {
                 return res.json();
             })
             .then(data => {
+                // Force a reload
+                refresh()
+
                 // Handle the data from the successful response.
                 alert("Business " + businessName + " updated!");
-                setIsLoading(false)
             })
             .catch(error => {
                 // Handle any errors that occurred while making the request.
