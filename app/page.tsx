@@ -1,4 +1,6 @@
 import BugDisplay from "./components/BugDisplay";
+import Link from 'next/link';
+import Button from "./components/Button";
 
 export default function Home() {
   return (
@@ -9,6 +11,9 @@ export default function Home() {
         </h1>
         <p>We are working on building the application and will have a version live soon.</p>
         <BugDisplay/>
+        <Button>
+          <Link href={"/business"}>Business Management</Link>
+        </Button>
       </div>
     </main>
   );
