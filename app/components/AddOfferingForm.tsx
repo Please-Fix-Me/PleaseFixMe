@@ -67,8 +67,8 @@ export default function BusinessForm() {
         <div className="min-w-full py-4">
             {
                 isLoading ? <LoadingSpinner /> :
-                    requestFinished ? <LinkButton href={'/business'}>
-                        Go back to businesses
+                    requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
+                        Return to {businessName} offerings
                     </LinkButton> :
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <label className="block">

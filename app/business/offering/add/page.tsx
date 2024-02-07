@@ -16,15 +16,26 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-16">
-            <div className="">
+            <div className="min-w-full">
                 <LinkButton href={"/"}>
                     Home
                 </LinkButton>
-                <h1 className="text-3xl py-5">
+                {" > "}
+                <LinkButton href={"/business"}>
+                    Businesses
+                </LinkButton>
+                {" > "}
+                <LinkButton href={"/business/offering?name=" + businessName}>
+                    {businessName} offerings
+                </LinkButton>
+                <h1 className="text-3xl py-5 text-center">
                     Add Offering for {businessName}
                 </h1>
-                <AddOfferingForm/>
-
+                <div className="min-w-full flex flex-col items-center">
+                    <div className="w-96">
+                        <AddOfferingForm />
+                    </div>
+                </div>
             </div>
         </main>
     );

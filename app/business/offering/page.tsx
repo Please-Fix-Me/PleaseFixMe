@@ -59,28 +59,34 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-16">
-            <div className="">
-                <LinkButton  href={"/"}>
+            <div className="min-w-full">
+                <LinkButton href={"/"}>
                     Home
                 </LinkButton>
-                <h1 className="text-3xl py-5">
+                {" > "}
+                <LinkButton href={"/business"}>
+                    Businesses
+                </LinkButton>
+                <h1 className="text-3xl py-5 text-center">
                     Edit {businessName} Offerings
                 </h1>
-                {
-                    isAuth ? <OfferingsList /> :
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <label className="block">
-                                Password:
-                                <input name="password" value={formData.password} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                            </label>
+                <div className="min-w-full flex flex-col items-center">
+                    <div className="w-80">
+                        {
+                            isAuth ? <OfferingsList /> :
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <label className="block">
+                                        Password:
+                                        <input name="password" value={formData.password} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
+                                    </label>
 
-                            <Button>
-                                <input type="submit" className='cursor-pointer' />
-                            </Button>
-                        </form>
-                }
-
-
+                                    <Button>
+                                        <input type="submit" className='cursor-pointer' />
+                                    </Button>
+                                </form>
+                        }
+                    </div>
+                </div>
             </div>
         </main>
     );

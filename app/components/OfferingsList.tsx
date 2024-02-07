@@ -44,30 +44,37 @@ export default function OfferingsList() {
     return <div className="min-w-full py-4">
         {
             isLoading ? <Spinner /> :
-                <table className="min-w-full text-center">
-                    <tbody>
-                        <tr className="border-b-2">
-                            <th>Offering</th>
-                            <th>Edit</th>
-                        </tr>
-                        {
-                            data.map((val, i) => {
-                                return <tr key={i}>
-                                    <td>{val.name}</td>
-                                    <td>
-                                        <LinkButton href={"/business/offering/edit?name=" + val.name + '&businessName=' + val.businessName}>
-                                            &#9881;
-                                        </LinkButton>
-                                    </td>
-                                </tr>
-                            })
-                        }
-                    </tbody>
-                </table>
+                <div>
+                    <table className="min-w-full text-center">
+                        <tbody>
+                            <tr className="border-b-2">
+                                <th className="px-2">Offering</th>
+                                <th className="px-2">Edit</th>
+                            </tr>
+                            {
+                                data.map((val, i) => {
+                                    return <tr key={i}>
+                                        <td>{val.name}</td>
+                                        <td>
+                                            <LinkButton href={"/business/offering/edit?name=" + val.name + '&businessName=' + val.businessName}>
+                                                <div className="text-3xl ">
+                                                    &#9881;
+                                                </div>
+                                            </LinkButton>
+                                        </td>
+                                    </tr>
+                                })
+                            }
+                        </tbody>
+                    </table>
+                    <div className="pt-3">
+                        <LinkButton href={"/business/offering/add?name=" + businessName}>
+                            Add a New Offering
+                        </LinkButton>
+                    </div>
+                </div>
         }
-        <LinkButton href={"/business/offering/add?name=" + businessName}>
-            Add a New Offering
-        </LinkButton>
+
 
     </div>
 

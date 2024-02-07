@@ -9,7 +9,7 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({ children, href }) => {
     return (
         <Link href={href}>
-            <button className="bg-white text-black py-2 px-4 rounded hover:bg-gray-200 cursor-pointer">
+            <button className="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer">
                 {children}
             </button>
         </Link>

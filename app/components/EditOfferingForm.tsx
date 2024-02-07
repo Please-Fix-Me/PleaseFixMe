@@ -129,9 +129,9 @@ export default function EditOfferingForm() {
         <div className="min-w-full py-4">
             {
                 isLoading ? <LoadingSpinner /> :
-                    requestFinished ? <LinkButton href={'/business'}>
-                        Go back to businesses
-                    </LinkButton> :
+                    requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
+                    Return to {businessName} offerings
+                </LinkButton> :
                         <div>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <label className="block">

@@ -33,35 +33,46 @@ export default function BusinessDisplay() {
 
     return <div className="min-w-full py-4">
         {
-            isLoading ? <Spinner/> : 
-            <table className="min-w-full text-center">
-            <tbody>
-                <tr className="border-b-2">
-                    <th>Business</th>
-                    <th>Offerings</th>
-                    <th>Preferences</th>
-                </tr>
-                {
-                    data.map((val, i) => {
-                        return <tr key={i}>
-                            <td>{val}</td>
-                            <td>
-                                <LinkButton href={"/business/offering?name=" + val}>
-                                    &#128214;
-                                </LinkButton>
-                            </td>
-                            <td>
-                                <LinkButton href={"/business/edit?name=" + val}>
-                                    &#9881;
-                                </LinkButton>
-                            </td>
-                        </tr>
-                    })
-                }
-            </tbody>
-        </table>
+            isLoading ? <Spinner /> :
+                <div>
+                    <table className="min-w-full text-center">
+                        <tbody>
+                            <tr className="border-b-2">
+                                <th className="px-2">Business</th>
+                                <th className="px-2">Offerings</th>
+                                <th className="px-2">Preferences</th>
+                            </tr>
+                            {
+                                data.map((val, i) => {
+                                    return <tr key={i}>
+                                        <td>{val}</td>
+                                        <td>
+                                            <LinkButton href={"/business/offering?name=" + val}>
+                                                <div className="text-xl my-1">
+                                                    &#128214;
+                                                </div>
+                                            </LinkButton>
+                                        </td>
+                                        <td>
+                                            <LinkButton href={"/business/edit?name=" + val}>
+                                                <div className="text-3xl ">
+                                                    &#9881;
+                                                </div>
+                                            </LinkButton>
+                                        </td>
+                                    </tr>
+                                })
+                            }
+                        </tbody>
+                    </table>
+                    <div className="pt-3">
+                        <LinkButton href={"/business/register"}>
+                            Register a New Business
+                        </LinkButton>
+                    </div>
+                </div>
         }
 
-        
+
     </div>
 }
