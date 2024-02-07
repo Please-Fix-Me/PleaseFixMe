@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./LoadingSpinner";
 import Button from "./Button";
 import Link from "next/link";
+import LinkButton from "./LinkButton";
 
 export default function BusinessDisplay() {
 
@@ -45,14 +46,14 @@ export default function BusinessDisplay() {
                         return <tr key={i}>
                             <td>{val}</td>
                             <td>
-                                <Button>
-                                    <Link href={"/business/offering?name=" + val}>&#128214;</Link>
-                                </Button>
+                                <LinkButton href={"/business/offering?name=" + val}>
+                                    &#128214;
+                                </LinkButton>
                             </td>
                             <td>
-                                <Button>
-                                    <Link href={"/business/edit?name=" + val}>&#9881;</Link>
-                                </Button>
+                                <LinkButton href={"/business/edit?name=" + val}>
+                                    &#9881;
+                                </LinkButton>
                             </td>
                         </tr>
                     })

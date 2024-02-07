@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
+import LinkButton from './LinkButton';
 
 type FormData = {
     name: string;
@@ -65,9 +66,9 @@ export default function BusinessForm() {
         <div className="min-w-full py-4">
             {
                 isLoading ? <LoadingSpinner /> :
-                    requestFinished ? <Button>
-                        <Link href={'/business'}>Go back to businesses</Link>
-                    </Button> :
+                    requestFinished ? <LinkButton href={'/business'}>
+                        Go back to businesses
+                    </LinkButton> :
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <label className="block">
                                 Business Name:

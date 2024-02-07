@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
 import Spinner from './LoadingSpinner';
+import LinkButton from './LinkButton';
 
 type ResponseData = {
     name: string;
@@ -42,32 +43,32 @@ export default function OfferingsList() {
 
     return <div className="min-w-full py-4">
         {
-            isLoading ? <Spinner/> : 
-            <table className="min-w-full text-center">
-            <tbody>
-                <tr className="border-b-2">
-                    <th>Offering</th>
-                    <th>Edit</th>
-                </tr>
-                {
-                    data.map((val, i) => {
-                        return <tr key={i}>
-                            <td>{val.name}</td>
-                            <td>
-                                <Button>
-                                    <Link href={"/business/offering/edit?name=" + val.name + '&businessName=' + val.businessName}>&#9881;</Link>
-                                </Button>
-                            </td>
+            isLoading ? <Spinner /> :
+                <table className="min-w-full text-center">
+                    <tbody>
+                        <tr className="border-b-2">
+                            <th>Offering</th>
+                            <th>Edit</th>
                         </tr>
-                    })
-                }
-            </tbody>
-        </table>
+                        {
+                            data.map((val, i) => {
+                                return <tr key={i}>
+                                    <td>{val.name}</td>
+                                    <td>
+                                        <LinkButton href={"/business/offering/edit?name=" + val.name + '&businessName=' + val.businessName}>
+                                            &#9881;
+                                        </LinkButton>
+                                    </td>
+                                </tr>
+                            })
+                        }
+                    </tbody>
+                </table>
         }
-        <Button>
-                <Link href={"/business/offering/add?name=" + businessName}>Add a New Offering</Link>
-            </Button>
-        
+        <LinkButton href={"/business/offering/add?name=" + businessName}>
+            Add a New Offering
+        </LinkButton>
+
     </div>
 
 }
