@@ -51,14 +51,14 @@ export default function BusinessForm() {
             })
             .then(data => {
                 // Handle the data from the successful response.
-                alert("Offering " + formData.name + " created.");
+                alert("Product " + formData.name + " created.");
                 setRequestFinished(true)
                 setIsLoading(false)
             })
             .catch(error => {
                 // Handle any errors that occurred while making the request.
                 console.error(`Error status: ${error.status}`, error.data);
-                alert("Adding offering was not successful.\n" + error.data.message)
+                alert("Adding product was not successful.\n" + error.data.message)
                 setIsLoading(false)
             });
     };
@@ -68,16 +68,16 @@ export default function BusinessForm() {
             {
                 isLoading ? <LoadingSpinner /> :
                     requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
-                        Return to {businessName} offerings
+                        Return to {businessName} products
                     </LinkButton> :
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <label className="block">
-                                Offering Name:
+                                Product Name:
                                 <input name="name" value={formData.name} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                             </label>
 
                             <label className="block">
-                                Offering Description:
+                                Product Description:
                                 <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                             </label>
 

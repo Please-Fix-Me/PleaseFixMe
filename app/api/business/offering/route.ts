@@ -52,10 +52,10 @@ export async function POST(request: NextRequest) {
             }
         )
         if (!existingDocument.success) {
-            throw new Error("Unable to verify offering name " + body['name'] + " availability.")
+            throw new Error("Unable to verify product name " + body['name'] + " availability.")
         }
         if (existingDocument.result) {
-            throw new Error("A offering with name " + body['name'] + " already exists. Please try another name.")
+            throw new Error("A product with name " + body['name'] + " already exists. Please try another name.")
         }
 
         // Create the offering
@@ -99,10 +99,10 @@ export async function PUT(request: NextRequest) {
             }
         )
         if (!existingDocument.success) {
-            throw new Error("Unable to verify offering name " + body['name'] + " availability.")
+            throw new Error("Unable to verify product name " + body['name'] + " availability.")
         }
         if (!existingDocument.result) {
-            throw new Error("A offering with name " + body['name'] + " does not already exist.")
+            throw new Error("A product with name " + body['name'] + " does not already exist.")
         }
 
         // Update the document
@@ -146,10 +146,10 @@ export async function DELETE(request: NextRequest) {
             }
         )
         if (!existingDocument.success) {
-            throw new Error("Unable to verify offering name " + offeringName + " availability.")
+            throw new Error("Unable to verify product name " + offeringName + " availability.")
         }
         if (!existingDocument.result) {
-            throw new Error("A offering with name " + offeringName + " does not already exist.")
+            throw new Error("A product with name " + offeringName + " does not already exist.")
         }
         
         // Delete password document first

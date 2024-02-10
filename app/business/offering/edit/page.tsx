@@ -26,7 +26,7 @@ export default function Home() {
                 </LinkButton>
                 {" > "}
                 <LinkButton href={"/business/offering?name=" + businessName}>
-                    {businessName} offerings
+                    {businessName} products
                 </LinkButton>
                 <h1 className="text-3xl py-5 text-center">
                     Edit {offeringName}

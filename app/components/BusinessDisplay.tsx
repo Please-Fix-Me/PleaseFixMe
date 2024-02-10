@@ -39,7 +39,7 @@ export default function BusinessDisplay() {
                         <tbody>
                             <tr className="border-b-2">
                                 <th className="px-2">Business</th>
-                                <th className="px-2">Offerings</th>
+                                <th className="px-2">Products</th>
                                 <th className="px-2">Preferences</th>
                             </tr>
                             {

@@ -75,7 +75,7 @@ export default function EditOfferingForm() {
             })
             .then(data => {
                 // Handle the data from the successful response.
-                alert("Offering " + offeringName + " deleted.");
+                alert("Products " + offeringName + " deleted.");
                 setRequestFinished(true)
                 refresh()
                 setIsLoading(false)
@@ -83,7 +83,7 @@ export default function EditOfferingForm() {
             .catch(error => {
                 // Handle any errors that occurred while making the request.
                 console.error(`Error status: ${error.status}`, error.data);
-                alert("Deleting offering was not successful.\n" + error.data.message)
+                alert("Deleting product was not successful.\n" + error.data.message)
                 setIsLoading(false)
             });
     }
@@ -116,12 +116,12 @@ export default function EditOfferingForm() {
                 refresh()
 
                 // Handle the data from the successful response.
-                alert("Offering " + offeringName + " updated!");
+                alert("Product " + offeringName + " updated!");
             })
             .catch(error => {
                 // Handle any errors that occurred while making the request.
                 console.error(`Error status: ${error.status}`, error.data);
-                alert("Updating offering was not successful.\n" + error.data.message)
+                alert("Updating product was not successful.\n" + error.data.message)
             });
     };
 
@@ -130,15 +130,15 @@ export default function EditOfferingForm() {
             {
                 isLoading ? <LoadingSpinner /> :
                     requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
-                    Return to {businessName} offerings
+                    Return to {businessName} products
                 </LinkButton> :
                         <div>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <label className="block">
-                                    Offering Name: { offeringName }
+                                    Product Name: { offeringName }
                                 </label>
                                 <label className="block">
-                                    Offering Description:
+                                    Product Description:
                                     <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                                 </label>
 

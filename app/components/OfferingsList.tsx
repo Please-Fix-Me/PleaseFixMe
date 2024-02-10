@@ -48,7 +48,7 @@ export default function OfferingsList() {
                     <table className="min-w-full text-center">
                         <tbody>
                             <tr className="border-b-2">
-                                <th className="px-2">Offering</th>
+                                <th className="px-2">Product</th>
                                 <th className="px-2">Edit</th>
                             </tr>
                             {
@@ -69,7 +69,7 @@ export default function OfferingsList() {
                     </table>
                     <div className="pt-3">
                         <LinkButton href={"/business/offering/add?name=" + businessName}>
-                            Add a New Offering
+                            Add a New Product
                         </LinkButton>
                     </div>
                 </div>

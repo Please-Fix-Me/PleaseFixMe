@@ -26,10 +26,10 @@ export default function Home() {
                 </LinkButton>
                 {" > "}
                 <LinkButton href={"/business/offering?name=" + businessName}>
-                    {businessName} offerings
+                    {businessName} products
                 </LinkButton>
                 <h1 className="text-3xl py-5 text-center">
-                    Add Offering for {businessName}
+                    Add Products for {businessName}
                 </h1>
                 <div className="min-w-full flex flex-col items-center">
                     <div className="w-96">

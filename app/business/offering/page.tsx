@@ -68,7 +68,7 @@ export default function Home() {
                     Businesses
                 </LinkButton>
                 <h1 className="text-3xl py-5 text-center">
-                    Edit {businessName} Offerings
+                    Edit {businessName} Products
                 </h1>
                 <div className="min-w-full flex flex-col items-center">
                     <div className="w-80">
