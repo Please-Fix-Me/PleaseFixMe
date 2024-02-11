@@ -1,7 +1,7 @@
 describe('Business Management Page ', () => {
     it('should navigate to business management', () => {
         //Start at website
-      //  cy.visit('https://pleasefixme.vercel.app/')
+        //  cy.visit('https://pleasefixme.vercel.app/')
         cy.visit('http://localhost:3000/')
 
         // Find a link with an href attribute containing "Business Management" and click it
@@ -44,6 +44,7 @@ describe('Business Management Page ', () => {
         cy.get('a[href*="/business"]').click()
 
         //We should have a line with our new business
+        cy.wait(500)
         cy.reload()
         cy.get('td').contains('Automation Test')
 
@@ -51,9 +52,11 @@ describe('Business Management Page ', () => {
         cy.get('a[href*="/business/offering?name=Automation Test"]').click()
         cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
         cy.get('input[type="submit"]').click()
+        cy.get('h1').contains('Edit Automation Test Products')
 
         //Click on add a new product
         cy.get('a[href*="/business/offering/add?name=Automation Test"]').click()
+        cy.get('h1').contains('Add Products for Automation Test')
 
         //Enter product name and description
         cy.get('input[name="name"]').type('Product 1')
@@ -95,6 +98,7 @@ describe('Business Management Page ', () => {
         cy.get('input[type="submit"]').click()
 
         //Verify the Business Description we previously entered
+        cy.get('h1').contains('Preferences for Automation Test')
         cy.get('textarea[name="description"]').contains('Automation Test Description')
 
         //Edit Business Description
@@ -145,6 +149,7 @@ describe('Business Management Page ', () => {
         cy.get('a[href*="/business"]').click()
 
         //Verify our business is no longer listed
+        cy.reload()
         cy.get('td').contains('Automation Test').should('not.exist')
-     })
+    })
 })
