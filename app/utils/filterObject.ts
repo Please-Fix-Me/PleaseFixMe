@@ -1,5 +1,3 @@
-// TODO: Unit test this
-
 export default function filterObject(obj: { [key: string]: any }, allowedFields: string[]): { [key: string]: any } {
     const filteredObj: { [key: string]: any } = {};
 
