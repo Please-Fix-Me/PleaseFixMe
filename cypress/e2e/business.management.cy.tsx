@@ -1,7 +1,8 @@
 describe('Business Management Page ', () => {
     it('should navigate to business management', () => {
         //Start at website
-        cy.visit('https://pleasefixme.vercel.app/')
+      //  cy.visit('https://pleasefixme.vercel.app/')
+        cy.visit('http://localhost:3000/')
 
         // Find a link with an href attribute containing "Business Management" and click it
         cy.get('a[href*="/business"]').click()
@@ -43,7 +44,46 @@ describe('Business Management Page ', () => {
         cy.get('a[href*="/business"]').click()
 
         //We should have a line with our new business
+        cy.reload()
         cy.get('td').contains('Automation Test')
+
+        //Access the product button for our business
+        cy.get('a[href*="/business/offering?name=Automation Test"]').click()
+        cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
+        cy.get('input[type="submit"]').click()
+
+        //Click on add a new product
+        cy.get('a[href*="/business/offering/add?name=Automation Test"]').click()
+
+        //Enter product name and description
+        cy.get('input[name="name"]').type('Product 1')
+        cy.get('textarea[name="description"]').type('This is description for Product 1')
+        cy.get('input[type="submit"]').click()
+
+        //Go back to products page and verify we see our product
+        cy.get('a[href*="/business/offering?name=Automation Test"]').click()
+        cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
+        cy.get('input[type="submit"]').click()
+        cy.get('td').contains('Product 1')
+
+        //Edit our product, verify original text and changes are correct, and delete it
+        cy.get('a[href*="/business/offering/edit?name=Product 1&businessName=Automation Test"]').click()
+        cy.get('h1').contains('Edit Product 1')
+        cy.get('textarea[name="description"]').contains('This is description for Product 1')
+        cy.get('textarea[name="description"]').type('{selectall}{backspace}')
+        cy.get('textarea[name="description"]').type('This is an update')
+        cy.get('input[type="submit"]').click()
+        cy.get('textarea[name="description"]').contains('This is an update')
+
+        //Delete our product and verify it is no longer listed
+        cy.get('button[class="bg-white text-black py-2 px-4 rounded hover:bg-gray-200 cursor-pointer"]').contains('Delete').click()
+        cy.get('a[href*="/business/offering?name=Automation Test"]').click()
+        cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
+        cy.get('input[type="submit"]').click()
+        cy.get('td').should('not.exist')
+
+        //Go back to business tab
+        cy.get('a[href*="/business"]').click()
 
         //Find the manage link
         cy.get('a[href*="/business/edit?name=Automation Test"]').click()
@@ -106,5 +146,5 @@ describe('Business Management Page ', () => {
 
         //Verify our business is no longer listed
         cy.get('td').contains('Automation Test').should('not.exist')
-    })
+     })
 })
