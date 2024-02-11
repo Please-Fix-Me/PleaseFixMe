@@ -1,21 +1,18 @@
 import { Collection, MongoClient } from 'mongodb';
 
-type FormData = {
-    name?: string;
-    contactName: string;
-    contactEmail: string;
-    contactPhone: string;
+type FormDataId = {
+    id?: string;
 };
 
-export default async function updateDocument(collectionName: string, json: FormData): Promise<{ success: boolean; message: string }> {
+export default async function updateDocumentById(collectionName: string, json: FormDataId): Promise<{ success: boolean; message: string }> {
 
     const uri = process.env.DB_CONNECTION_STRING!
     const db = process.env.DB_NAME!
 
     const client = new MongoClient(uri);
 
-    const name = json.name;
-    delete json.name
+    const id = json.id;
+    delete json.id
     try {
         // Connect to MongoDB cluster
         await client.connect();
@@ -25,7 +22,7 @@ export default async function updateDocument(collectionName: string, json: FormD
         const collection = database.collection(collectionName);
 
         const result = await collection.updateOne(
-            { name: name },
+            { id: id },
             {
                 $set: json,
             }

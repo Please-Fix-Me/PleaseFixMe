@@ -9,20 +9,25 @@ import Spinner from './LoadingSpinner';
 import LinkButton from './LinkButton';
 
 type ResponseData = {
-    name: string;
+    id: string
+    name: string
+    offeringName: string
     businessName: string
+    status: string
+    severity: number
 };
 
-export default function OfferingsList() {
+export default function DefectsDisplay() {
 
     const searchParams = useSearchParams();
-    const businessName = searchParams.get("name")
+    const businessName = searchParams.get("businessName")
+    const offeringName = searchParams.get("offeringName")
 
     const [data, setData] = useState<Array<ResponseData>>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetch('/api/business/offering?businessName=' + businessName, {
+        fetch('/api/business/offering/defect?businessName=' + businessName + '&offeringName=' + offeringName, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -39,7 +44,7 @@ export default function OfferingsList() {
                     setIsLoading(false)
                 }
             })
-    }, [businessName])
+    }, [businessName, offeringName])
 
     return <div className="min-w-full py-4">
         {
@@ -48,26 +53,20 @@ export default function OfferingsList() {
                     <table className="min-w-full text-center">
                         <tbody>
                             <tr className="border-b-2">
-                                <th className="px-2">Product</th>
-                                <th className='px-2'>Defects</th>
-                                <th className="px-2">Preferences</th>
+                                <th className="px-2">Name</th>
+                                <th className='px-2'>Severity</th>
+                                <th className="px-2">Status</th>
+                                <th className="px-2">More</th>
                             </tr>
                             {
                                 data.map((val, i) => {
                                     return <tr key={i}>
                                         <td>{val.name}</td>
+                                        <td>{val.severity}</td>
+                                        <td>{val.status}</td>
                                         <td>
-                                            <LinkButton href={"/business/offering/defect?offeringName=" + val.name + '&businessName=' + val.businessName}>
-                                                <div className="text-3xl ">
-                                                    &#129714;
-                                                </div>
-                                            </LinkButton>
-                                        </td>
-                                        <td>
-                                            <LinkButton href={"/business/offering/edit?name=" + val.name + '&businessName=' + val.businessName}>
-                                                <div className="text-3xl ">
-                                                    &#9881;
-                                                </div>
+                                            <LinkButton href={"/business/offering/defect/view?id=" + val.id + '&businessName=' + val.businessName + '&offeringName=' + val.offeringName}>
+                                                ...
                                             </LinkButton>
                                         </td>
                                     </tr>
@@ -75,15 +74,7 @@ export default function OfferingsList() {
                             }
                         </tbody>
                     </table>
-                    <div className="pt-3">
-                        <LinkButton href={"/business/offering/add?name=" + businessName}>
-                            Add a New Product
-                        </LinkButton>
-                    </div>
                 </div>
         }
-
-
     </div>
-
 }
