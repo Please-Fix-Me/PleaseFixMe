@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Button from "../../components/Button";
-import EditBusinessForm from "@/app/components/EditBusinessForm";
 import { useState } from "react";
 import { useSearchParams } from 'next/navigation'
+import OfferingsList from "@/app/components/OfferingsList";
 import LinkButton from "@/app/components/LinkButton";
 
 
@@ -68,12 +68,12 @@ export default function Home() {
                     Businesses
                 </LinkButton>
                 <h1 className="text-3xl py-5 text-center">
-                    Preferences for {businessName}
+                    Edit {businessName} Products
                 </h1>
                 <div className="min-w-full flex flex-col items-center">
                     <div className="w-80">
                         {
-                            isAuth ? <EditBusinessForm /> :
+                            isAuth ? <OfferingsList /> :
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <label className="block">
                                         Password:
@@ -87,7 +87,6 @@ export default function Home() {
                         }
                     </div>
                 </div>
-
             </div>
         </main>
     );

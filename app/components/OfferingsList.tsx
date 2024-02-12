@@ -1,18 +1,28 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import Spinner from "./LoadingSpinner";
-import Button from "./Button";
-import Link from "next/link";
-import LinkButton from "./LinkButton";
+import { useEffect, useState } from 'react';
+import Button from './Button';
+import { useSearchParams } from 'next/navigation';
+import LoadingSpinner from './LoadingSpinner';
+import Link from 'next/link';
+import Spinner from './LoadingSpinner';
+import LinkButton from './LinkButton';
 
-export default function BusinessDisplay() {
+type ResponseData = {
+    name: string;
+    businessName: string
+};
 
-    const [data, setData] = useState<Array<string>>([]);
+export default function OfferingsList() {
+
+    const searchParams = useSearchParams();
+    const businessName = searchParams.get("name")
+
+    const [data, setData] = useState<Array<ResponseData>>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetch('/api/business/auth', {
+        fetch('/api/business/offering?businessName=' + businessName, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -29,7 +39,7 @@ export default function BusinessDisplay() {
                     setIsLoading(false)
                 }
             })
-    }, [])
+    }, [businessName, data])
 
     return <div className="min-w-full py-4">
         {
@@ -38,23 +48,15 @@ export default function BusinessDisplay() {
                     <table className="min-w-full text-center">
                         <tbody>
                             <tr className="border-b-2">
-                                <th className="px-2">Business</th>
-                                <th className="px-2">Products</th>
-                                <th className="px-2">Preferences</th>
+                                <th className="px-2">Product</th>
+                                <th className="px-2">Edit</th>
                             </tr>
                             {
                                 data.map((val, i) => {
                                     return <tr key={i}>
-                                        <td>{val}</td>
+                                        <td>{val.name}</td>
                                         <td>
-                                            <LinkButton href={"/business/offering?name=" + val}>
-                                                <div className="text-xl my-1">
-                                                    &#128214;
-                                                </div>
-                                            </LinkButton>
-                                        </td>
-                                        <td>
-                                            <LinkButton href={"/business/edit?name=" + val}>
+                                            <LinkButton href={"/business/offering/edit?name=" + val.name + '&businessName=' + val.businessName}>
                                                 <div className="text-3xl ">
                                                     &#9881;
                                                 </div>
@@ -66,8 +68,8 @@ export default function BusinessDisplay() {
                         </tbody>
                     </table>
                     <div className="pt-3">
-                        <LinkButton href={"/business/register"}>
-                            Register a New Business
+                        <LinkButton href={"/business/offering/add?name=" + businessName}>
+                            Add a New Product
                         </LinkButton>
                     </div>
                 </div>
@@ -75,4 +77,5 @@ export default function BusinessDisplay() {
 
 
     </div>
+
 }

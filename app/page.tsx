@@ -1,6 +1,7 @@
 import BugDisplay from "./components/BugDisplay";
 import Link from 'next/link';
 import Button from "./components/Button";
+import LinkButton from "./components/LinkButton";
 
 export default function Home() {
   return (
@@ -10,10 +11,12 @@ export default function Home() {
           Welcome to PleaseFixMe!
         </h1>
         <p>We are working on building the application and will have a version live soon.</p>
-        <BugDisplay/>
-        <Button>
-          <Link href={"/business"}>Business Management</Link>
-        </Button>
+        <BugDisplay />
+
+        <LinkButton href={"/business"}>
+          Business Management
+        </LinkButton>
+
       </div>
     </main>
   );

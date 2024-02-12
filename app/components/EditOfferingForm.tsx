@@ -8,18 +8,16 @@ import Link from 'next/link';
 import LinkButton from './LinkButton';
 
 type FormData = {
+    name: string;
     description: string;
-    contactName: string;
-    contactEmail: string;
-    contactPhone: string;
+    businessName: string
 };
 
-export default function BusinessForm() {
+export default function EditOfferingForm() {
     const [formData, setFormData] = useState<FormData>({
+        name: '',
         description: '',
-        contactName: '',
-        contactEmail: '',
-        contactPhone: '',
+        businessName: ''
     });
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [toggleRefreshState, setToggleRefreshState] = useState<boolean>(true);
@@ -30,12 +28,13 @@ export default function BusinessForm() {
     }
 
     const searchParams = useSearchParams();
-    const businessName = searchParams.get("name")
+    const businessName = searchParams.get("businessName")
+    const offeringName = searchParams.get("name")
 
     useEffect(() => {
         if (!requestFinished) {
             setIsLoading(true)
-            fetch('/api/business/?name=' + businessName, {
+            fetch('/api/business/offering/?businessName=' + businessName + "&name=" + offeringName, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -54,13 +53,13 @@ export default function BusinessForm() {
                     setIsLoading(false)
                 })
         }
-    }, [businessName, requestFinished, toggleRefreshState])
+    }, [businessName, offeringName, requestFinished, toggleRefreshState])
 
     const handleDelete = (e: any) => {
         e.preventDefault();
         setIsLoading(true)
 
-        fetch('/api/business/?name=' + businessName, {
+        fetch('/api/business/offering/?businessName=' + businessName + "&name=" + offeringName, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -76,7 +75,7 @@ export default function BusinessForm() {
             })
             .then(data => {
                 // Handle the data from the successful response.
-                alert("Business " + businessName + " deleted.");
+                alert("Products " + offeringName + " deleted.");
                 setRequestFinished(true)
                 refresh()
                 setIsLoading(false)
@@ -84,7 +83,7 @@ export default function BusinessForm() {
             .catch(error => {
                 // Handle any errors that occurred while making the request.
                 console.error(`Error status: ${error.status}`, error.data);
-                alert("Deleting business was not successful.\n" + error.data.message)
+                alert("Deleting product was not successful.\n" + error.data.message)
                 setIsLoading(false)
             });
     }
@@ -97,7 +96,7 @@ export default function BusinessForm() {
         e.preventDefault();
         setIsLoading(true)
 
-        fetch('/api/business/', {
+        fetch('/api/business/offering/', {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -117,12 +116,12 @@ export default function BusinessForm() {
                 refresh()
 
                 // Handle the data from the successful response.
-                alert("Business " + businessName + " updated!");
+                alert("Product " + offeringName + " updated!");
             })
             .catch(error => {
                 // Handle any errors that occurred while making the request.
                 console.error(`Error status: ${error.status}`, error.data);
-                alert("Updating business was not successful.\n" + error.data.message)
+                alert("Updating product was not successful.\n" + error.data.message)
             });
     };
 
@@ -130,33 +129,17 @@ export default function BusinessForm() {
         <div className="min-w-full py-4">
             {
                 isLoading ? <LoadingSpinner /> :
-                    requestFinished ? <LinkButton href={'/business'}>
-                        Go back to businesses
-                    </LinkButton> :
+                    requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
+                    Return to {businessName} products
+                </LinkButton> :
                         <div>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <label className="block">
-                                    Business Name: {businessName}
+                                    Product Name: { offeringName }
                                 </label>
                                 <label className="block">
-                                    Business Description:
+                                    Product Description:
                                     <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                                </label>
-
-
-                                <label className="block">
-                                    Contact Person Name:
-                                    <input name="contactName" value={formData.contactName} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                                </label>
-
-                                <label className="block">
-                                    Contact Email Address:
-                                    <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                                </label>
-
-                                <label className="block">
-                                    Contact Phone Number:
-                                    <input type="tel" name="contactPhone" value={formData.contactPhone} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                                 </label>
 
                                 <Button>

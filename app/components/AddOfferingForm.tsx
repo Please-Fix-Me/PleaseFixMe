@@ -4,23 +4,24 @@ import { useState } from 'react';
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import LinkButton from './LinkButton';
 
 type FormData = {
     name: string;
+    businessName: string;
     description: string;
-    contactName: string;
-    contactEmail: string;
-    contactPhone: string;
 };
 
 export default function BusinessForm() {
+
+    const searchParams = useSearchParams();
+    const businessName = searchParams.get("name")!;
+
     const [formData, setFormData] = useState<FormData>({
         name: '',
-        description: '',
-        contactName: '',
-        contactEmail: '',
-        contactPhone: '',
+        businessName: businessName,
+        description: ''
     });
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [requestFinished, setRequestFinished] = useState<boolean>(false);
@@ -33,7 +34,7 @@ export default function BusinessForm() {
         e.preventDefault();
         setIsLoading(true)
 
-        fetch('/api/business/', {
+        fetch('/api/business/offering/', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -50,14 +51,14 @@ export default function BusinessForm() {
             })
             .then(data => {
                 // Handle the data from the successful response.
-                alert("Business " + formData.name + " created!\nPassword: " + data.password + "\nEnsure you write this down. If you lose this password, you will lose access to your business.");
+                alert("Product " + formData.name + " created.");
                 setRequestFinished(true)
                 setIsLoading(false)
             })
             .catch(error => {
                 // Handle any errors that occurred while making the request.
                 console.error(`Error status: ${error.status}`, error.data);
-                alert("Registering business was not successful.\n" + error.data.message)
+                alert("Adding product was not successful.\n" + error.data.message)
                 setIsLoading(false)
             });
     };
@@ -66,33 +67,18 @@ export default function BusinessForm() {
         <div className="min-w-full py-4">
             {
                 isLoading ? <LoadingSpinner /> :
-                    requestFinished ? <LinkButton href={'/business'}>
-                        Go back to businesses
+                    requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
+                        Return to {businessName} products
                     </LinkButton> :
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <label className="block">
-                                Business Name:
+                                Product Name:
                                 <input name="name" value={formData.name} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                             </label>
 
                             <label className="block">
-                                Business Description:
+                                Product Description:
                                 <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                            </label>
-
-                            <label className="block">
-                                Contact Person Name:
-                                <input name="contactName" value={formData.contactName} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                            </label>
-
-                            <label className="block">
-                                Contact Email Address:
-                                <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
-                            </label>
-
-                            <label className="block">
-                                Contact Phone Number:
-                                <input type="tel" name="contactPhone" value={formData.contactPhone} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                             </label>
 
                             <Button>
