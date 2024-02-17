@@ -9,7 +9,7 @@ import Spinner from './LoadingSpinner';
 import LinkButton from './LinkButton';
 
 type ResponseData = {
-    id: string
+    _id: string
     name: string
     offeringName: string
     businessName: string
@@ -63,9 +63,9 @@ export default function DefectsDisplay() {
                                     return <tr key={i}>
                                         <td>{val.name}</td>
                                         <td>{val.severity}</td>
-                                        <td>{val.status}</td>
+                                        <td>{val.status ?? "Open"}</td>
                                         <td>
-                                            <LinkButton href={"/business/offering/defect/view?id=" + val.id + '&businessName=' + val.businessName + '&offeringName=' + val.offeringName}>
+                                            <LinkButton href={"/business/offering/defect/view?id=" + val._id + '&businessName=' + val.businessName + '&offeringName=' + val.offeringName}>
                                                 ...
                                             </LinkButton>
                                         </td>

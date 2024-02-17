@@ -7,6 +7,7 @@ import queryCollection from "@/app/utils/queryCollection";
 import documentExists from "@/app/utils/documentExists";
 import deleteDocument from "@/app/utils/deleteDocument";
 import filterObject from "@/app/utils/filterObject";
+import { ObjectId } from "mongodb";
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +24,7 @@ export async function GET(request:NextRequest) {
         defectId ? { 
             businessName: businessName,
             offeringName: offeringName,
-            id: defectId
+            _id: new ObjectId(defectId)
         } : {
             businessName: businessName,
             offeringName: offeringName
@@ -50,7 +51,7 @@ export async function PATCH(request: NextRequest) {
             { 
                 businessName: body['businessName'],
                 offeringName: body['offeringName'],
-                id: body['id']
+                _id: new ObjectId(body['_id'])
             }
         )
         if (!existingDocument.success) {

@@ -12,13 +12,15 @@ import { ALLOWED_DEFECT_STATES } from "@/app/constants";
 import { StatusChangeObj } from "@/app/utils/statusChange";
 
 type ResponseData = {
-    id: string
+    _id: string
     name: string
     offeringName: string
     businessName: string
     status: string
     severity: number
     description: string
+    downVotes: number
+    upVotes: number
     statusChanges: StatusChangeObj[]
     statusChangeReason: string
 };
@@ -31,13 +33,15 @@ export default function Home() {
     const id = searchParams.get("id")
 
     const [data, setData] = useState<ResponseData>({
-        id: '',
+        _id: '',
         name: '',
         offeringName: '',
         businessName: '',
         status: '',
         severity: -1,
         description: '',
+        upVotes: 0,
+        downVotes: 0,
         statusChangeReason: '',
         statusChanges: []
     });
@@ -151,6 +155,12 @@ export default function Home() {
                                         </label>
                                         <label className="block">
                                             Severity: {data.severity}
+                                        </label>
+                                        <label className="block">
+                                            Up Votes: {data.upVotes}
+                                        </label>
+                                        <label className="block">
+                                            Down Votes: {data.downVotes}
                                         </label>
                                         <label className="block">
                                             <>Status: </>
