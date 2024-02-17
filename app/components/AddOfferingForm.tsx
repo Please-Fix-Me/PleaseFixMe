@@ -99,7 +99,7 @@ export default function BusinessForm() {
 
                             <label className='block'>
                                 Product Image:
-                                <input name="image" type="file" accept="image/*" onChange={handleImageChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md" />
+                                <input name="image" type="file" accept="image/*" onChange={handleImageChange} className="block mt-1 w-full p-2 border border-gray-300 rounded-md" />
                             </label>
 
                             <Button>
