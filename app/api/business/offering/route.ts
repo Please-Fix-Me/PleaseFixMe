@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
         if (result.success) {
             response = NextResponse.json({});
         } else {
-            throw new Error("Failed to edit " + body['name'] + ".")
+            throw new Error("Failed to add " + body['name'] + ".")
         }
     } catch (e) {
         // Something went wrong

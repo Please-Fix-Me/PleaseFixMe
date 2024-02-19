@@ -6,16 +6,19 @@ import { useSearchParams } from 'next/navigation';
 import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
 import LinkButton from './LinkButton';
+import Image from "next/image"
 
 type FormData = {
     name: string;
     description: string;
-    businessName: string
+    businessName: string;
+    image: string;
 };
 
 export default function EditOfferingForm() {
     const [formData, setFormData] = useState<FormData>({
         name: '',
+        image: '',
         description: '',
         businessName: ''
     });
@@ -92,6 +95,20 @@ export default function EditOfferingForm() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleImageChange = (e: React.ChangeEvent<any>) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            setFormData({
+                ...formData,
+                image: reader.result! as string,
+            });
+        };
+
+        reader.readAsDataURL(file);
+    };
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true)
@@ -130,17 +147,31 @@ export default function EditOfferingForm() {
             {
                 isLoading ? <LoadingSpinner /> :
                     requestFinished ? <LinkButton href={'/business/offering?name=' + businessName}>
-                    Return to {businessName} products
-                </LinkButton> :
+                        Return to {businessName} products
+                    </LinkButton> :
                         <div>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <label className="block">
-                                    Product Name: { offeringName }
+                                    Product Name: {offeringName}
                                 </label>
+
                                 <label className="block">
                                     Product Description:
                                     <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
                                 </label>
+
+                                <label className='block'>
+                                    Product Image:
+                                    <input name="image" type="file" accept="image/*" onChange={handleImageChange} className="block mt-1 w-full p-2 border border-gray-300 rounded-md" />
+                                </label>
+
+                                {
+                                    formData.image ? <Image
+                                        src={formData.image}
+                                        width={100} height={100}
+                                        alt="Please upload an image to see it here"
+                                    /> : <></>
+                                }
 
                                 <Button>
                                     <input type="submit" className='cursor-pointer' />

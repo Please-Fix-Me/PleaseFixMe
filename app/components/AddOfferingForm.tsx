@@ -11,6 +11,7 @@ type FormData = {
     name: string;
     businessName: string;
     description: string;
+    image: string;
 };
 
 export default function BusinessForm() {
@@ -20,6 +21,7 @@ export default function BusinessForm() {
 
     const [formData, setFormData] = useState<FormData>({
         name: '',
+        image: '',
         businessName: businessName,
         description: ''
     });
@@ -28,6 +30,20 @@ export default function BusinessForm() {
 
     const handleChange = (e: React.ChangeEvent<any>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<any>) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            setFormData({
+                ...formData,
+                image: reader.result! as string,
+            });
+        };
+
+        reader.readAsDataURL(file);
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,6 +95,11 @@ export default function BusinessForm() {
                             <label className="block">
                                 Product Description:
                                 <textarea name="description" value={formData.description} onChange={handleChange} required className="block mt-1 w-full p-2 border border-gray-300 rounded-md text-black" />
+                            </label>
+
+                            <label className='block'>
+                                Product Image:
+                                <input name="image" type="file" accept="image/*" onChange={handleImageChange} className="block mt-1 w-full p-2 border border-gray-300 rounded-md" />
                             </label>
 
                             <Button>

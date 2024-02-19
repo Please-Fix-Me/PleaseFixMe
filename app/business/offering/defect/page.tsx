@@ -7,13 +7,15 @@ import { useState } from "react";
 import { useSearchParams } from 'next/navigation'
 import EditOfferingForm from "@/app/components/EditOfferingForm";
 import LinkButton from "@/app/components/LinkButton";
+import DefectsDisplay from "@/app/components/DefectsDisplay";
 import Image from 'next/image'
 
 export default function Home() {
 
     const searchParams = useSearchParams();
     const businessName = searchParams.get("businessName")
-    const offeringName = searchParams.get("name")
+    const offeringName = searchParams.get("offeringName")
+    const id = searchParams.get("id")
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-16">
@@ -37,11 +39,11 @@ export default function Home() {
                     {businessName} products
                 </LinkButton>
                 <h1 className="text-3xl py-5 text-center">
-                    Edit {offeringName}
+                    {offeringName} defects
                 </h1>
                 <div className="min-w-full flex flex-col items-center">
                     <div className="w-96">
-                        <EditOfferingForm />
+                        <DefectsDisplay />
                     </div>
                 </div>
             </div>
