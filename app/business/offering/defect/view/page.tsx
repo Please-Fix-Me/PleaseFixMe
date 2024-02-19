@@ -18,6 +18,7 @@ type ResponseData = {
     name: string
     offeringName: string
     businessName: string
+    reportedByEmail: string
     status: string
     severity: number
     description: string
@@ -40,6 +41,7 @@ export default function Home() {
         name: '',
         offeringName: '',
         businessName: '',
+        reportedByEmail: '',
         status: '',
         severity: -1,
         description: '',
@@ -163,6 +165,9 @@ export default function Home() {
                                         </label>
                                         <label className="block">
                                             Business: {data.businessName}
+                                        </label>
+                                        <label className="block">
+                                            Reported By: {data.reportedByEmail}
                                         </label>
                                         <label className="block">
                                             Severity: {data.severity}
