@@ -149,6 +149,7 @@ describe('Business Management Page ', () => {
         cy.get('a[href*="/business"]').click()
 
         //Verify our business is no longer listed
+        cy.wait(500)
         cy.reload()
         cy.get('td').contains('Automation Test').should('not.exist')
     })
