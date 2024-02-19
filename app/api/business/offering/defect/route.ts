@@ -73,6 +73,7 @@ export async function PATCH(request: NextRequest) {
             reason: body['statusChangeReason']
         })
         body.statusChanges = statusChanges
+        body._id = new ObjectId(body['_id'])
 
         // Clean input, in case of security vulnerability
         body = filterObject(body, ALLOWED_DEFECT_UPDATE_FIELDS)

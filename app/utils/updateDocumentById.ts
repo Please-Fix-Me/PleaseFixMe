@@ -1,7 +1,7 @@
 import { Collection, MongoClient, ObjectId } from 'mongodb';
 
 type FormDataId = {
-    _id?: string;
+    _id?: ObjectId;
 };
 
 export default async function updateDocumentById(collectionName: string, json: FormDataId): Promise<{ success: boolean; message: string }> {
@@ -11,7 +11,7 @@ export default async function updateDocumentById(collectionName: string, json: F
 
     const client = new MongoClient(uri);
 
-    const id = new ObjectId(json._id);
+    const id = json._id;
     delete json._id
     try {
         // Connect to MongoDB cluster
