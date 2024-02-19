@@ -11,6 +11,7 @@ import Spinner from "@/app/components/LoadingSpinner";
 import { ALLOWED_DEFECT_STATES } from "@/app/constants";
 import { StatusChangeObj } from "@/app/utils/statusChange";
 import Image from 'next/image'
+import { Document as MongoDoc } from 'mongodb'
 
 type ResponseData = {
     _id: string
@@ -24,6 +25,7 @@ type ResponseData = {
     upVotes: number
     statusChanges: StatusChangeObj[]
     statusChangeReason: string
+    comments: MongoDoc[]
 };
 
 export default function Home() {
@@ -44,7 +46,8 @@ export default function Home() {
         upVotes: 0,
         downVotes: 0,
         statusChangeReason: '',
-        statusChanges: []
+        statusChanges: [],
+        comments: []
     });
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [toggleRefreshState, setToggleRefreshState] = useState<boolean>(true);
@@ -217,7 +220,31 @@ export default function Home() {
 
                                         </div> : <></>
                                     }
-
+                                    <div className='bg-white h-1 my-3'></div>
+                                    {
+                                        data.comments ? <div>
+                                            <h2 className="text-2xl text-center">
+                                                User Comments
+                                            </h2>
+                                            <table className="min-w-full text-center">
+                                                <tbody>
+                                                    <tr className="border-b-2">
+                                                        <th className="px-2 border-r">Comment</th>
+                                                        <th className='px-2'>Posted At</th>
+                                                    </tr>
+                                                    {
+                                                        data.comments.map((obj, i) => (
+                                                            <tr key={i} className="border-b">
+                                                                <td className="border-r">{obj.details}</td>
+                                                                <td>{new Date(obj.reportedOn).toLocaleString()}</td>
+                                                            </tr>
+                                                        ))
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div> : <></>
+                                    }
+                                    {/* TODO: I have access to comments in ResponseData. Display them here (with a divider) */}
                                 </div>
                         }
                     </div>
