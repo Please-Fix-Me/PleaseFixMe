@@ -19,8 +19,8 @@ export default function Home() {
         <p className="pt-3">
           If you are a user of products managed by PleaseFixMe and wish to report a defect, use the button below.
         </p>
-        <LinkButton href={"TODO: "}>
-          TODO
+        <LinkButton href={"http://pleasefixme.arawaksoftware.com/#/"}>
+          Defect Reporting
         </LinkButton>
 
         <p className="pt-3">
