@@ -1,8 +1,8 @@
 describe('Business Management Page ', () => {
     it('should navigate to business management', () => {
         //Start at website
-        //  cy.visit('https://pleasefixme.vercel.app/')
-        cy.visit('http://localhost:3000/')
+        cy.visit('https://pleasefixme.vercel.app/')
+     //   cy.visit('http://localhost:3000/')
 
         // Find a link with an href attribute containing "Business Management" and click it
         cy.get('a[href*="/business"]').click()
