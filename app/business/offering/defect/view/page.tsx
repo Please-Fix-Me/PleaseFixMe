@@ -249,7 +249,6 @@ export default function Home() {
                                             </table>
                                         </div> : <></>
                                     }
-                                    {/* TODO: I have access to comments in ResponseData. Display them here (with a divider) */}
                                 </div>
                         }
                     </div>
