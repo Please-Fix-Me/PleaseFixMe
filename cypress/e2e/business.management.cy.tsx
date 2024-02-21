@@ -41,10 +41,10 @@ describe('Business Management Page ', () => {
         cy.wait(500)
 
         //Click on buinesss link to go back to "Manage a Business" screen
-        cy.get('a[href*="/business"]').click()
+        cy.get('a[href*="/business"]').contains("Go back to businesses").click()
 
         //We should have a line with our new business
-        cy.wait(500)
+        cy.wait(1000)
         cy.reload()
         cy.get('td').contains('Automation Test')
 
@@ -74,22 +74,38 @@ describe('Business Management Page ', () => {
         cy.get('input[type="submit"]').click()
         cy.get('td').contains('Product 1')
 
+        //Trying to add defect from customer side
+        cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').contains('Home').click()
+        cy.get('a[href*="http://pleasefixme.arawaksoftware.com/#/"]').click()
+
+
+
+
+
         //Go to defects page for Boston University
-        //Will need to update once all code gets merged into main
-        //cy.get('a[href*="/business"]').click('.btn')
-        // cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').click()
-        // cy.get('a[href*="/business/offering?name=Boston University"]').click()
-        // cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
-        // cy.get('a[href*="/business/offering/defect?offeringName=Zoom&businessName=Boston University"]').click()
-        // cy.get('a[href*="/business/offering/defect/view?id=65d320d7b8e8a014ecba4669&businessName=Boston University&offeringName=Zoom"]').click()
-        // cy.get("select").select("Won't Fix")
-        // cy.get('textarea[name="statusChangeReason"]').click()
-        // cy.get('textarea[name="description"]').type('This is my reason')
-        // cy.get('input[type="submit"]').click()
-        // cy.get('td').contains('Wont Fix').should('exist')
-        // cy.get('a[href*="/business"]').click()
+        cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').contains('Businesses').click()
+       // cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').click()
+        cy.get('a[href*="/business/offering?name=Boston University"]').click()
+        cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
+        cy.get('input[type="submit"]').click()
+        cy.get('a[href*="/business/offering/defect?offeringName=Zoom&businessName=Boston University"]').click()
+       // cy.get('a[href*="/business/offering/defect/view?id=65d320d7b8e8a014ecba4669&businessName=Boston University&offeringName=Zoom"]').click()
+        cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').contains('...').click()
+        cy.get('select[name="status"]').select("WontFix")
+        cy.get('textarea[name="statusChangeReason"]').click()
+        cy.get('textarea[name="statusChangeReason"]').type('This is my reason')
+        cy.get('input[type="submit"]').click()
+        cy.get('td').contains('WontFix').should('exist')
+        cy.get('select[name="status"]').select("Fixing")
+        cy.get('textarea[name="statusChangeReason"]').click()
+        cy.get('textarea[name="statusChangeReason"]').type('This is my reason')
+        cy.get('input[type="submit"]').click()
+        cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').contains('Businesses').click()
 
         //Edit our product, verify original text and changes are correct, and delete it
+        cy.get('a[href*="/business/offering?name=Automation Test"]').click()
+        cy.get('input[name="password"]').type('0/k0t2qZK/Ak')
+        cy.get('input[type="submit"]').click()
         cy.get('a[href*="/business/offering/edit?name=Product 1&businessName=Automation Test"]').click()
         cy.get('h1').contains('Edit Product 1')
         cy.get('textarea[name="description"]').contains('This is description for Product 1')
