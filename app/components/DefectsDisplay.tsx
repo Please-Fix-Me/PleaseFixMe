@@ -22,6 +22,7 @@ export default function DefectsDisplay() {
     const searchParams = useSearchParams();
     const businessName = searchParams.get("businessName")
     const offeringName = searchParams.get("offeringName")
+    const adminAuth = searchParams.get("adminAuth")
 
     const [data, setData] = useState<Array<ResponseData>>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -65,7 +66,7 @@ export default function DefectsDisplay() {
                                         <td>{val.severity}</td>
                                         <td>{val.status ?? "Open"}</td>
                                         <td>
-                                            <LinkButton href={"/business/offering/defect/view?id=" + val._id + '&businessName=' + val.businessName + '&offeringName=' + val.offeringName}>
+                                            <LinkButton href={"/business/offering/defect/view?id=" + val._id + '&businessName=' + val.businessName + '&offeringName=' + val.offeringName + "&adminAuth=" + adminAuth}>
                                                 ...
                                             </LinkButton>
                                         </td>

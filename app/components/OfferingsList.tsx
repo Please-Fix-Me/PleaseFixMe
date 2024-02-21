@@ -13,10 +13,11 @@ type ResponseData = {
     businessName: string
 };
 
-export default function OfferingsList() {
+export default function OfferingsList(props: any) {
 
     const searchParams = useSearchParams();
     const businessName = searchParams.get("name")
+    const adminAuth = props.adminAuth
 
     const [data, setData] = useState<Array<ResponseData>>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -57,7 +58,7 @@ export default function OfferingsList() {
                                     return <tr key={i}>
                                         <td>{val.name}</td>
                                         <td>
-                                            <LinkButton href={"/business/offering/defect?offeringName=" + val.name + '&businessName=' + val.businessName}>
+                                            <LinkButton href={"/business/offering/defect?offeringName=" + val.name + '&businessName=' + val.businessName + '&adminAuth=' + adminAuth}>
                                                 <div className="text-3xl ">
                                                     &#129714;
                                                 </div>

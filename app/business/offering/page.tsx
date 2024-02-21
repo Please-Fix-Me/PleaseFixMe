@@ -17,6 +17,7 @@ export default function Home() {
         password: ''
     });
     const [isAuth, setIsAuth] = useState<boolean>(false)
+    const [adminAuth, setAdminAuth] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -49,6 +50,7 @@ export default function Home() {
             .then(data => {
                 // Handle the data from the successful response.
                 setIsAuth(true)
+                setAdminAuth(data.message == "admin")
             })
             .catch(error => {
                 // Handle any errors that occurred while making the request.
@@ -80,7 +82,7 @@ export default function Home() {
                 <div className="min-w-full flex flex-col items-center">
                     <div className="w-80">
                         {
-                            isAuth ? <OfferingsList /> :
+                            isAuth ? <OfferingsList adminAuth={adminAuth}/> :
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <label className="block">
                                         Password:
