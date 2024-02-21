@@ -8,6 +8,7 @@ import documentExists from "@/app/utils/documentExists";
 import deleteDocument from "@/app/utils/deleteDocument";
 import filterObject from "@/app/utils/filterObject";
 import { ObjectId } from "mongodb";
+import pullFromDocumentById from "@/app/utils/pullFromDocumentById";
 
 export const dynamic = 'force-dynamic';
 
@@ -93,6 +94,69 @@ export async function PATCH(request: NextRequest) {
                 message: e.message
             }, {
                 status: 400,
+            })
+        }
+    }
+
+    return response
+}
+
+export async function DELETE(request: NextRequest) {
+    // Set response object to track
+    var response: NextResponse<any> = NextResponse.json({ status: 500 })
+
+    // Get business name from query string
+    const id = request.nextUrl.searchParams.get("id")
+    const name = request.nextUrl.searchParams.get("name")
+    const commentId = request.nextUrl.searchParams.get("commentId")
+
+    var result = null
+    try {
+        // Check if a document with the same name already exists
+        const existingDocument = await documentExists(
+            DEFECT_COLLECTION_NAME, 
+            { 
+                _id: new ObjectId(id!)
+            }
+        )
+        if (!existingDocument.success) {
+            throw new Error("Unable to verify defect name " + name + " availability.")
+        }
+        if (!existingDocument.result) {
+            throw new Error("A defect with name " + name + " does not already exist.")
+        }
+        
+        if (commentId) {
+            const body = {
+                _id: new ObjectId(id!),
+                comments: { "_id": Number(commentId) }
+            }
+            result = await pullFromDocumentById(DEFECT_COLLECTION_NAME, body)
+        } else {
+            result = await deleteDocument(DEFECT_COLLECTION_NAME, {
+                _id: new ObjectId(id!)
+            })
+        }
+
+        if (result.success) {
+            response = NextResponse.json({});
+        } else {
+            throw new Error("Failed to delete " + name + ".")
+        }
+
+    } catch (e) {
+        // Something went wrong
+        if (e instanceof Error) {
+            response = NextResponse.json({
+                message: e.message
+            }, {
+                status: 400,
+            })
+        } else {
+            response = NextResponse.json({
+                message: "An unknown error occurred."
+            }, {
+                status: 500,
             })
         }
     }

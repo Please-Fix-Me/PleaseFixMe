@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {  ADMIN_PASSWORD_DB_KEY, BUSINESS_PASSWORD_COLLECTION_NAME } from "@/app/constants";
+import { ADMIN_PASSWORD_DB_KEY, BUSINESS_PASSWORD_COLLECTION_NAME } from "@/app/constants";
 import queryCollection from "@/app/utils/queryCollection";
 import documentExists from "@/app/utils/documentExists";
 
@@ -55,7 +55,11 @@ export async function POST(request:NextRequest) {
     if (response.success || adminResponse.success) {
         if (response.result || adminResponse.result) {
             // Document was found - ok
-            return NextResponse.json({})
+            return NextResponse.json({
+                message: adminResponse.result ? 'admin' : 'business'
+            }, {
+                status: 200
+            })
         } else {
             // Document was not found - incorrect password
             return NextResponse.json({

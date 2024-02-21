@@ -34,6 +34,7 @@ export default function Home() {
     const searchParams = useSearchParams();
     const businessName = searchParams.get("businessName")
     const offeringName = searchParams.get("offeringName")
+    const adminAuth = searchParams.get("adminAuth") == "true" // Effectively "cast" to a bool
     const id = searchParams.get("id")
 
     const [data, setData] = useState<ResponseData>({
@@ -54,6 +55,7 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [toggleRefreshState, setToggleRefreshState] = useState<boolean>(true);
     const [startingStatus, setStartingStatus] = useState<string>('')
+    const [requestFinished, setRequestFinished] = useState<boolean>(false);
 
     const refresh = () => {
         setToggleRefreshState(!toggleRefreshState)
@@ -97,26 +99,93 @@ export default function Home() {
             });
     };
 
-    useEffect(() => {
-        fetch('/api/business/offering/defect?businessName=' + businessName + '&offeringName=' + offeringName + '&id=' + id, {
-            method: "GET",
+    const handleDelete = (e: any) => {
+        e.preventDefault();
+        setIsLoading(true)
+
+        fetch('/api/business/offering/defect?id=' + id + "&name=" + data.name, {
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
             }
         })
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.success) {
-                    res = res.result[0]
-                    setStartingStatus(res.status)
-                    setData(res)
-                    setIsLoading(false)
-                } else {
-                    alert(res.result)
-                    setIsLoading(false)
+            .then(res => {
+                if (!res.ok) {
+                    // If the response status is not ok, parse the response body as JSON and return a Promise that rejects with the error message and data.
+                    return res.json().then(data => Promise.reject({ status: res.status, data }));
+                }
+                // If the response status is ok, parse the response body as JSON.
+                return res.json();
+            })
+            .then(data => {
+                // Handle the data from the successful response.
+                alert("Defect " + data.name + " deleted.");
+                setRequestFinished(true)
+                refresh()
+                setIsLoading(false)
+            })
+            .catch(error => {
+                // Handle any errors that occurred while making the request.
+                console.error(`Error status: ${error.status}`, error.data);
+                alert("Deleting defect was not successful.\n" + error.data.message)
+                setIsLoading(false)
+            });
+    }
+
+    const handleCommentDelete = (e: any, commentId: number) => {
+        e.preventDefault();
+        setIsLoading(true)
+
+        fetch('/api/business/offering/defect?id=' + id + "&name=" + data.name + "&commentId=" + commentId, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    // If the response status is not ok, parse the response body as JSON and return a Promise that rejects with the error message and data.
+                    return res.json().then(data => Promise.reject({ status: res.status, data }));
+                }
+                // If the response status is ok, parse the response body as JSON.
+                return res.json();
+            })
+            .then(data => {
+                // Handle the data from the successful response.
+                alert("Comment deleted.");
+                refresh()
+                setIsLoading(false)
+            })
+            .catch(error => {
+                // Handle any errors that occurred while making the request.
+                console.error(`Error status: ${error.status}`, error.data);
+                alert("Deleting comment was not successful.\n" + error.data.message)
+                setIsLoading(false)
+            });
+    }
+
+    useEffect(() => {
+        if (!requestFinished) {
+            fetch('/api/business/offering/defect?businessName=' + businessName + '&offeringName=' + offeringName + '&id=' + id, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
                 }
             })
-    }, [businessName, id, offeringName, toggleRefreshState])
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.success) {
+                        res = res.result[0]
+                        setStartingStatus(res.status)
+                        setData(res)
+                        setIsLoading(false)
+                    } else {
+                        alert(res.result)
+                        setIsLoading(false)
+                    }
+                })
+        }
+    }, [businessName, id, offeringName, requestFinished, toggleRefreshState])
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-16">
@@ -140,7 +209,7 @@ export default function Home() {
                     {businessName} products
                 </LinkButton>
                 {" > "}
-                <LinkButton href={"/business/offering/defect?businessName=" + businessName + "&offeringName=" + offeringName}>
+                <LinkButton href={"/business/offering/defect?businessName=" + businessName + "&offeringName=" + offeringName + "&adminAuth=" + adminAuth}>
                     {offeringName} defects
                 </LinkButton>
                 <div className="min-w-full flex flex-col items-center">
@@ -148,7 +217,9 @@ export default function Home() {
                         {
                             isLoading ? <div className="pt-4">
                                 <Spinner />
-                            </div> :
+                            </div> : requestFinished ? <LinkButton href={"/business/offering/defect?businessName=" + businessName + "&offeringName=" + offeringName + "&adminAuth=" + adminAuth}>
+                                Go back to defects
+                            </LinkButton> :
                                 <div>
                                     <h1 className="text-3xl py-5 text-center">
                                         {offeringName} - {data.name}
@@ -200,6 +271,16 @@ export default function Home() {
                                             <input type="submit" className='cursor-pointer' />
                                         </Button>
                                     </form>
+                                    {
+                                        adminAuth ? <>
+                                            <div className='bg-white h-1 my-3'></div>
+                                            <Button>
+                                                <div onClick={handleDelete}>
+                                                    Delete for SAFETY REASONS
+                                                </div>
+                                            </Button>
+                                        </> : <></>
+                                    }
                                     <div className='bg-white h-1 my-3'></div>
                                     {
                                         data.statusChanges ? <div>
@@ -236,12 +317,26 @@ export default function Home() {
                                                     <tr className="border-b-2">
                                                         <th className="px-2 border-r">Comment</th>
                                                         <th className='px-2'>Posted At</th>
+                                                        {
+                                                            adminAuth
+                                                                ? <th className="px-2 border-l">Mod. Delete</th>
+                                                                : <></>
+                                                        }
                                                     </tr>
                                                     {
                                                         data.comments.map((obj, i) => (
                                                             <tr key={i} className="border-b">
                                                                 <td className="border-r">{obj.details}</td>
                                                                 <td>{new Date(obj.reportedOn).toLocaleString()}</td>
+                                                                {adminAuth
+                                                                    ? <td className="border-l">
+                                                                        <Button>
+                                                                            <div onClick={e => handleCommentDelete(e, obj._id)}>
+                                                                                X
+                                                                            </div>
+                                                                        </Button>
+                                                                    </td>
+                                                                    : <></>}
                                                             </tr>
                                                         ))
                                                     }
