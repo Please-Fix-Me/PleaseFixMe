@@ -1,23 +1,17 @@
-
-import '@testing-library/jest-dom'
 import updateDocument from '../../app/utils/updateDocument'
 import { MongoClient } from 'mongodb';
 
 jest.mock('mongodb');
 
-let mockUpdateOne: jest.Mock;
-
-beforeEach(() => {
-    mockUpdateOne = jest.fn();
-    (MongoClient as unknown as jest.Mock).mockReturnValue({
-        connect: jest.fn().mockResolvedValue(undefined),
-        db: jest.fn().mockReturnValue({
-            collection: jest.fn().mockReturnValue({
-                updateOne: mockUpdateOne,
-            }),
+let mockUpdateOne = jest.fn();
+(MongoClient as any as jest.Mock).mockReturnValue({
+    connect: jest.fn().mockResolvedValue(undefined),
+    db: jest.fn().mockReturnValue({
+        collection: jest.fn().mockReturnValue({
+            updateOne: mockUpdateOne,
         }),
-        close: jest.fn().mockResolvedValue(undefined),
-    });
+    }),
+    close: jest.fn().mockResolvedValue(undefined),
 });
 
 it('should update a doc in the collection and return success', async () => {

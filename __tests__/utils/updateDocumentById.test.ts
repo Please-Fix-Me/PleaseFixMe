@@ -1,23 +1,17 @@
-
-import '@testing-library/jest-dom'
 import updateDocumentById from '../../app/utils/updateDocumentById'
 import { MongoClient, ObjectId } from 'mongodb';
 
 jest.mock('mongodb');
 
-let mockUpdateOne: jest.Mock;
-
-beforeEach(() => {
-    mockUpdateOne = jest.fn();
-    (MongoClient as unknown as jest.Mock).mockReturnValue({
-        connect: jest.fn().mockResolvedValue(undefined),
-        db: jest.fn().mockReturnValue({
-            collection: jest.fn().mockReturnValue({
-                updateOne: mockUpdateOne,
-            }),
+let mockUpdateOne = jest.fn();
+(MongoClient as any as jest.Mock).mockReturnValue({
+    connect: jest.fn().mockResolvedValue(undefined),
+    db: jest.fn().mockReturnValue({
+        collection: jest.fn().mockReturnValue({
+            updateOne: mockUpdateOne,
         }),
-        close: jest.fn().mockResolvedValue(undefined),
-    });
+    }),
+    close: jest.fn().mockResolvedValue(undefined),
 });
 
 const OBJ_ID = new ObjectId("5e63c3a5e4232e4cd0274ac2")

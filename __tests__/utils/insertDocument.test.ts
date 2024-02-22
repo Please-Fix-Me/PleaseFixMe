@@ -1,23 +1,17 @@
-
-import '@testing-library/jest-dom'
 import insertDocument from '../../app/utils/insertDocument'
 import { MongoClient } from 'mongodb';
 
 jest.mock('mongodb');
 
-let mockInsertOne: jest.Mock;
-
-beforeEach(() => {
-    mockInsertOne = jest.fn();
-    (MongoClient as unknown as jest.Mock).mockReturnValue({
-        connect: jest.fn().mockResolvedValue(undefined),
-        db: jest.fn().mockReturnValue({
-            collection: jest.fn().mockReturnValue({
-                insertOne: mockInsertOne,
-            }),
+let mockInsertOne = jest.fn();
+(MongoClient as any as jest.Mock).mockReturnValue({
+    connect: jest.fn().mockResolvedValue(undefined),
+    db: jest.fn().mockReturnValue({
+        collection: jest.fn().mockReturnValue({
+            insertOne: mockInsertOne,
         }),
-        close: jest.fn().mockResolvedValue(undefined),
-    });
+    }),
+    close: jest.fn().mockResolvedValue(undefined),
 });
 
 it('should insert a doc into collection and return success', async () => {
