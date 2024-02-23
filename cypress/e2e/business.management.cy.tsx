@@ -74,14 +74,6 @@ describe('Business Management Page ', () => {
         cy.get('input[type="submit"]').click()
         cy.get('td').contains('Product 1')
 
-        //Trying to add defect from customer side
-        cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').contains('Home').click()
-        cy.get('a[href*="http://pleasefixme.arawaksoftware.com/#/"]').click()
-
-
-
-
-
         //Go to defects page for Boston University
         cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').contains('Businesses').click()
        // cy.get('button[class*="bg-white text-black py-1 px-3 rounded hover:bg-gray-200 cursor-pointer"]').click()
